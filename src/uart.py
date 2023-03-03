@@ -17,7 +17,6 @@ def uart_task(event, com, num_smpl, time):
     # ser.baudrate = 115200
     # ser.port = 'COM10'
 
-    print(com)
     instrument = minimalmodbus.Instrument(com, 1)  # port name, slave address (in decimal)
     ser_name = instrument.serial.port                  # this is the serial port name               
     instrument.serial.baudrate = 115200                # Baud
@@ -82,14 +81,13 @@ def main():
     print("Доступные COM-порты:")
     for port, desc, hwid in sorted(ports):
         print("Имя: {}; Описание: {}.".format(port, desc))
-    print("Введите имя COM-порта:")
-    com_port = str(input())    
+    print("Введите номер COM-порта:")
+    com_port = f"COM{input()}"
     print("Введите кол-во выборок:")
     num_samples = int(input())
     print("Введите задержку между выборками, мс.:")
     timeout = float(input()) / 1000.0
 
-    print(com_port)
     # print("start threads...")
     uart = threading.Thread(target=uart_task, args=(event, com_port, num_samples, timeout))
     # keyrd = threading.Thread(target=keyRead_task)
@@ -100,5 +98,7 @@ def main():
     uart.join()
     # keyrd.join()
 
+    input('Press ENTER to exit')
+    
 if __name__ == '__main__':
     main()
